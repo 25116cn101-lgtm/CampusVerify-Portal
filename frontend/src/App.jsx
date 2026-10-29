@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react'
+﻿import React, { useEffect, useRef, useState } from 'react'
 import {
   ShieldCheck, GraduationCap, FileCheck2, ClipboardList, Users, LogOut,
   Upload, RefreshCw, CheckCircle2, AlertCircle, Clock3, CalendarDays,
@@ -409,7 +409,7 @@ function App() {
           </div>
 
           <div className="login-foot">
-            A preparation and queue tool — not a scholarship approval system.
+            A preparation and queue tool â€” not a scholarship approval system.
           </div>
         </div>
 
@@ -449,7 +449,7 @@ function App() {
               )}
 
               <button className="primary full" disabled={loading}>
-                {loading ? 'Signing in…' : 'Sign in'}
+                {loading ? 'Signing inâ€¦' : 'Sign in'}
                 <ArrowRight size={17} />
               </button>
             </form>
@@ -537,7 +537,7 @@ function App() {
           <div className="college-avatar">CV</div>
           <div>
             <strong>Demo College</strong>
-            <small>Academic session 2026–27</small>
+            <small>Academic session 2026â€“27</small>
           </div>
         </div>
 
@@ -597,7 +597,7 @@ function App() {
 
           <div className="top-actions">
             <span className="session-pill">
-              <span className="green-dot" /> 2026–27 session
+              <span className="green-dot" /> 2026â€“27 session
             </span>
             <button
               className="icon-btn refresh"
@@ -880,13 +880,13 @@ function App() {
 
                         <div className="uploaded-doc-list">
                           {ruleDocs.length === 0 ? (
-                            <small>PDF, PNG or JPEG · max 10 MB</small>
+                            <small>PDF, PNG or JPEG Â· max 10 MB</small>
                           ) : (
                             ruleDocs.map(d => (
                               <div className="uploaded-doc-item" key={d.id}>
                                 <span className="uploaded-doc-name">
                                   <FileText size={15} />
-                                  <span>{d.filename} · {d.status}</span>
+                                  <span>{d.filename} Â· {d.status}</span>
                                 </span>
                                 <div className="upload-actions">
                                   <button
@@ -919,7 +919,7 @@ function App() {
                           disabled={busy}
                           onClick={() => openCamera(r.key)}
                         >
-                          📷 Take Photo
+                          ðŸ“· Take Photo
                         </button>
 
                         <label className={`upload-btn ${busy ? 'disabled' : ''}`}>
@@ -1071,7 +1071,7 @@ function App() {
                             <strong>{s.name}</strong>
                             <small>{s.email}</small>
                           </td>
-                          <td>{s.admission_number || '—'}</td>
+                          <td>{s.admission_number || 'â€”'}</td>
                           <td>{s.document_count}</td>
                           <td>
                             {s.documents.map(d => (
@@ -1135,7 +1135,7 @@ function App() {
                     <div className="rule-info">
                       <strong>{r.label}</strong>
                       <p>{r.description}</p>
-                      <small>{r.key} · {r.applies_to}</small>
+                      <small>{r.key} Â· {r.applies_to}</small>
                     </div>
                     <div className="rule-controls">
                       <label>
@@ -1218,7 +1218,7 @@ function App() {
                   onClick={closeCamera}
                   aria-label="Close camera"
                 >
-                  ✕
+                  âœ•
                 </button>
               </div>
 
@@ -1257,7 +1257,7 @@ function App() {
                     className="primary"
                     onClick={capturePhoto}
                   >
-                    📷 Capture Photo
+                    ðŸ“· Capture Photo
                   </button>
                 ) : (
                   <>
@@ -1267,7 +1267,7 @@ function App() {
                       disabled={busy}
                       onClick={retakePhoto}
                     >
-                      ↻ Retake
+                      â†» Retake
                     </button>
 
                     <button
@@ -1277,7 +1277,7 @@ function App() {
                       onClick={submitCameraPhoto}
                     >
                       <Upload size={16} />
-                      {busy ? 'Uploading…' : 'Use Photo & Upload'}
+                      {busy ? 'Uploadingâ€¦' : 'Use Photo & Upload'}
                     </button>
                   </>
                 )}
@@ -1296,10 +1296,10 @@ function App() {
         )}
 
         <footer className="app-footer">
-          <span>© 2026 CampusVerify · College workflow assistant</span>
+          <span>Â© 2026 CampusVerify Â· College workflow assistant</span>
           <span>
             <ShieldCheck size={14} />
-            Private by design · Final verification by college staff
+            Private by design Â· Final verification by college staff
           </span>
         </footer>
       </main>
@@ -1357,7 +1357,7 @@ function QueueRows({ queue, onAction, role, busy }) {
 
           <div className="queue-person">
             <strong>{q.student_name}{q.mine ? ' (You)' : ''}</strong>
-            <small>{q.counter} · {q.slot_date}</small>
+            <small>{q.counter} Â· {q.slot_date}</small>
           </div>
 
           <span className={`status status-${q.status.toLowerCase().replace(' ', '-')}`}>
