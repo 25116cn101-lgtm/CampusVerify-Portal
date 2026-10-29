@@ -1,4 +1,4 @@
-const API = import.meta.env.VITE_API_BASE || ''
+const API = import.meta.env.VITE_API_BASE || 'https://campusverify-portal.onrender.com'
 
 export function getToken() {
   return localStorage.getItem('cv_token') || ''
@@ -72,4 +72,5 @@ export async function request(path, options = {}) {
 
   return data
 }
+
 
