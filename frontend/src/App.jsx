@@ -228,7 +228,7 @@ function App() {
       setError('')
 
       const response = await fetch(
-        `${import.meta.env.VITE_API_BASE || ''}/api/documents/${doc.id}/file`,
+        `${import.meta.env.VITE_API_BASE || 'https://campusverify-portal.onrender.com'}/api/documents/${doc.id}/file`,
         {
           headers: {
             Authorization: `Bearer ${getToken()}`
@@ -1424,3 +1424,4 @@ function QueueRows({ queue, onAction, role, busy }) {
 }
 
 export default App
+
