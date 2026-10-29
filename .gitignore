@@ -1,0 +1,52 @@
+# Environment variables and secrets
+.env
+.env.*
+!.env.example
+
+# Dependencies
+node_modules/
+.venv/
+venv/
+
+# Python cache
+__pycache__/
+*.py[cod]
+
+# Private uploads and user documents
+private_uploads/
+
+# Database backups and dumps
+*.dump
+*.sql
+*.bak
+
+# Build output
+dist/
+build/
+
+# Logs
+*.log
+# Local environment files
+.env
+.env.*
+!.env.example
+
+# Local databases and credentials
+*.db
+*.sqlite
+*.sqlite3
+*.pem
+*.key
+
+# Python virtual environments
+backend/.venv/
+backend/venv/
+
+# Uploaded/private files
+uploads/
+private_uploads/
+# Test and tool caches
+.pytest_cache/
+.coverage
+htmlcov/
+.vscode/
