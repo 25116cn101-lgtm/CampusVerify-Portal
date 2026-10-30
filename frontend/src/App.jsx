@@ -8,6 +8,180 @@ import { request, setSession, clearSession, getUser, getToken } from './api'
 
 const moneySafeDate = () => new Date().toISOString().slice(0, 10)
 
+const scholarshipCategories = [
+  'General',
+  'SC/ST',
+  'OBC',
+  'Minority'
+]
+
+const scholarshipDocuments = [
+  {
+    id: 1,
+    title: 'Cover Letter',
+    appliesTo: 'All',
+    required: true
+  },
+  {
+    id: 2,
+    title: 'Document Checklist',
+    appliesTo: 'All',
+    required: true
+  },
+  {
+    id: 3,
+    title: 'Google Form Printout',
+    appliesTo: 'All',
+    required: true
+  },
+  {
+    id: 4,
+    title: 'Scholarship Form Printout',
+    appliesTo: 'All',
+    required: true
+  },
+  {
+    id: 5,
+    title: 'Last Year Scholarship Status Printout (2025–26)',
+    appliesTo: 'Renewal',
+    required: true
+  },
+  {
+    id: 6,
+    title: 'Counselling Letter',
+    appliesTo: 'Conditional',
+    required: false,
+    note: 'If applicable'
+  },
+  {
+    id: 7,
+    title: 'JEE Rank Card / CUET Rank Card',
+    appliesTo: 'Conditional',
+    required: false,
+    note: 'For applicable courses such as B.Tech, MBA, MCA and B.Tech Lateral Entry'
+  },
+  {
+    id: 8,
+    title: "Father's Income Certificate and Latest Verification",
+    appliesTo: 'All',
+    required: true,
+    note: 'Verify current college and official portal requirements'
+  },
+  {
+    id: 9,
+    title: 'Income Source Supporting Documents',
+    appliesTo: 'Conditional',
+    required: false,
+    note: 'Business/shop: ITR and six-month bank statement. Salary/job: ITR or salary slip and six-month bank statement, as required by college.'
+  },
+  {
+    id: 10,
+    title: "Student's Caste Certificate and Latest Verification",
+    appliesTo: 'Conditional',
+    required: false,
+    note: 'As applicable to category'
+  },
+  {
+    id: 11,
+    title: "Student's Domicile Certificate and Latest Verification",
+    appliesTo: 'All',
+    required: true
+  },
+  {
+    id: 12,
+    title: 'Bank Attested Passbook Copy with Photograph',
+    appliesTo: 'All',
+    required: true
+  },
+  {
+    id: 13,
+    title: 'All Marksheets from Class 10 Onwards',
+    appliesTo: 'All',
+    required: true
+  },
+  {
+    id: 14,
+    title: 'Educational Gap Affidavit',
+    appliesTo: 'Conditional',
+    required: false,
+    note: 'Only if there is an educational gap'
+  },
+  {
+    id: 15,
+    title: "Current Session's Tuition Fee Receipt",
+    appliesTo: 'All',
+    required: true
+  },
+  {
+    id: 16,
+    title: 'Hostel Fee Receipt and Hostel Bonafide',
+    appliesTo: 'Hosteller',
+    required: false
+  },
+  {
+    id: 17,
+    title: "Student's Aadhaar Card",
+    appliesTo: 'All',
+    required: true
+  },
+  {
+    id: 18,
+    title: "Student's College ID Card",
+    appliesTo: 'All',
+    required: true
+  },
+  {
+    id: 19,
+    title: "Father's Aadhaar Card and PAN Card",
+    appliesTo: 'All',
+    required: true
+  },
+  {
+    id: 20,
+    title: "Mother's Aadhaar Card and PAN Card",
+    appliesTo: 'All',
+    required: true
+  },
+  {
+    id: 21,
+    title: 'Student Scholarship Affidavit',
+    appliesTo: 'All',
+    required: true
+  },
+  {
+    id: 22,
+    title: 'Parents Scholarship Affidavit',
+    appliesTo: 'All',
+    required: true
+  },
+  {
+    id: 23,
+    title: 'Missed First/Second Year Application Affidavit',
+    appliesTo: 'Conditional',
+    required: false,
+    note: 'If the student did not apply in first or second year; genuine reason required'
+  }
+]
+
+const scholarshipApplicationTypes = [
+  { label: 'Fresh Application', value: 'Fresh' },
+  { label: 'Renewal Application', value: 'Renewal' }
+]
+
+const scholarshipPortalLinks = {
+  scholarship: 'https://scholarship.up.gov.in/',
+  income: 'https://edistrict.up.gov.in/edistrictup/'
+}
+
+function getScholarshipDocuments(applicationType, hostelStatus = false) {
+  return scholarshipDocuments.filter(doc => {
+    if (doc.appliesTo === 'All') return true
+    if (doc.appliesTo === 'Renewal') return applicationType === 'Renewal'
+    if (doc.appliesTo === 'Hosteller') return hostelStatus
+    return true
+  })
+}
+
 function App() {
   const [user, setUser] = useState(getUser())
   const [identifier, setIdentifier] = useState('student@campusverify.local')
@@ -26,7 +200,12 @@ function App() {
   const [slotDate, setSlotDate] = useState(moneySafeDate())
   const [busy, setBusy] = useState(false)
   const [search, setSearch] = useState('')
-
+  
+  // UP Scholarship Guide state
+  const [scholarshipType, setScholarshipType] = useState('Fresh')
+  const [scholarshipCategory, setScholarshipCategory] = useState('General')
+  const [scholarshipHosteller, setScholarshipHosteller] = useState(false)
+  const [scholarshipChecked, setScholarshipChecked] = useState({})
   // Camera and photo preview state
   const [cameraRule, setCameraRule] = useState(null)
   const [cameraPreview, setCameraPreview] = useState(null)
@@ -382,6 +561,7 @@ function App() {
   const title = ({
     overview: 'Overview',
     documents: 'Documents & checklist',
+    scholarship: 'UP Scholarship Guide',
     queue: 'Live token queue',
     students: 'Student review',
     rules: 'Checklist rules',
@@ -498,6 +678,7 @@ function App() {
   const nav = [
     { id: 'overview', label: 'Overview', icon: ClipboardList },
     { id: 'documents', label: 'Documents & checklist', icon: FileCheck2 },
+    { id: 'scholarship', label: 'UP Scholarship Guide', icon: GraduationCap },
     { id: 'queue', label: 'Live token queue', icon: Clock3 },
     ...(user.role !== 'student'
       ? [{ id: 'students', label: 'Student review', icon: Users }]
@@ -829,7 +1010,121 @@ function App() {
             </div>
           </>
         )}
+                  {page === 'scholarship' && (
+          <div className="panel">
+            <div className="panel-head">
+              <div>
+                <h2>UP Scholarship Guide 2026–27</h2>
+                <p>Prepare your scholarship document set.</p>
+              </div>
+              <GraduationCap size={30} />
+            </div>
 
+            <div className="section-intro">
+              <div>
+                <label>Application Type</label>
+                <select
+                  value={scholarshipType}
+                  onChange={e => {
+                    setScholarshipType(e.target.value)
+                    setScholarshipChecked({})
+                  }}
+                >
+                  {scholarshipApplicationTypes.map(type => (
+                    <option key={type.value} value={type.value}>
+                      {type.label}
+                    </option>
+                  ))}
+                </select>
+              </div>
+
+              <div>
+                <label>Category</label>
+                <select
+                  value={scholarshipCategory}
+                  onChange={e => setScholarshipCategory(e.target.value)}
+                >
+                  {scholarshipCategories.map(category => (
+                    <option key={category} value={category}>
+                      {category}
+                    </option>
+                  ))}
+                </select>
+              </div>
+            </div>
+
+            <label>
+              <input
+                type="checkbox"
+                checked={scholarshipHosteller}
+                onChange={e => setScholarshipHosteller(e.target.checked)}
+              />
+              I am a Hosteller
+            </label>
+
+            <h3>Document Checklist</h3>
+
+            {getScholarshipDocuments(
+              scholarshipType,
+              scholarshipHosteller
+            )
+              .filter(doc =>
+                !(scholarshipCategory === 'General' && doc.id === 10)
+              )
+              .map(doc => (
+                <label
+                  key={doc.id}
+                  className="document-row"
+                  style={{ display: 'flex', gap: '12px', padding: '12px' }}
+                >
+                  <input
+                    type="checkbox"
+                    checked={!!scholarshipChecked[doc.id]}
+                    onChange={e => setScholarshipChecked(prev => ({
+                      ...prev,
+                      [doc.id]: e.target.checked
+                    }))}
+                  />
+
+                  <span>
+                    <strong>{doc.id}. {doc.title}</strong>
+                    {doc.note && <p>{doc.note}</p>}
+                    <small>
+                      {doc.required ? 'Required' : 'If applicable'}
+                    </small>
+                  </span>
+                </label>
+              ))}
+
+            <p>
+              Completed: {
+                Object.values(scholarshipChecked).filter(Boolean).length
+              }
+            </p>
+
+            <button
+              className="primary"
+              onClick={() => window.print()}
+            >
+              Print Checklist
+            </button>
+
+            <div className="info-note">
+              Confirm the latest document requirements with your college
+              and the official UP Scholarship portal before submission.
+            </div>
+
+            <p>
+              <a href={scholarshipPortalLinks.scholarship} target="_blank" rel="noreferrer">
+                UP Scholarship Portal
+              </a>
+              {' | '}
+              <a href={scholarshipPortalLinks.income} target="_blank" rel="noreferrer">
+                e-District Portal
+              </a>
+            </p>
+          </div>
+        )}
         {page === 'documents' && (
           <>
             <div className="section-intro">
